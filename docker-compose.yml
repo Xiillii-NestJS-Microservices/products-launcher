@@ -28,7 +28,7 @@ services:
     environment:
       - PORT=3004
       - NATS_SERVERS=nats://nats-server:4222
-      - DATABASE_URL=mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@auth-db:27017/${MONGO_DB_NAME}
+      - DATABASE_URL=mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@auth-db:27017/${MONGO_DB_NAME}?authSource=admin
 
   products-ms:
     build: ./products-ms
@@ -86,12 +86,21 @@ services:
 
   auth-db:
     container_name: auth_database
-    image: mongo
+    build: ./mongodb-rs
     restart: always
+    volumes:
+      - ./auth-ms/mongo:/data/db
+    ports:
+      - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_DB_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_DB_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DB_NAME}
+      - MONGO_REPLICA_HOST=auth-db
+      - MONGO_REPLICA_PORT=27017
   mongo-express:
+    depends_on:
+      - auth-db
     image: mongo-express
     restart: always
     ports:

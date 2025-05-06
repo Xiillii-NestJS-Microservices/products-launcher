@@ -28,7 +28,7 @@ services:
     environment:
       - PORT=3004
       - NATS_SERVERS=nats://nats-server:4222
-      - DATABASE_URL=mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@auth-db:27017/
+      - DATABASE_URL=mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@auth-db:27017/${MONGO_DB_NAME}
 
   products-ms:
     build: ./products-ms

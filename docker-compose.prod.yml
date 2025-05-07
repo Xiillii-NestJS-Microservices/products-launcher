@@ -45,6 +45,8 @@ services:
     build: 
       context: ./orders-ms
       dockerfile: dockerfile.prod
+      args:
+        - ORDERS_DATABASE_URL=postgresql://${POSTGRES_DB_USER}:${POSTGRES_DB_PASSWORD}@orders_database:5432/${POSTGRES_DB_NAME}?schema=public
     image: orders-ms
     environment:
       - PORT=3002
